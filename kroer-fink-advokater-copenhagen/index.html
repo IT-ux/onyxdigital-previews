@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kroer\Fink Advokater | Clear Advice, Strong Representation</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#050507;color:#fff;overflow-x:hidden}
+.font-display{font-family:'Playfair Display',serif}
+::selection{background:#7c3aed;color:#fff}
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:#050507}
+::-webkit-scrollbar-thumb{background:linear-gradient(#7c3aed,#d4af37);border-radius:5px}
+
+/* Preloader */
+#preloader{position:fixed;inset:0;z-index:10000;background:#050507;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px}
+#preloader .brand{font-family:'Playfair Display',serif;font-size:clamp(2rem,6vw,3.5rem);font-weight:900;letter-spacing:.02em}
+#preloader .brand span{color:#a78bfa}
+#preloader .bar{width:min(240px,60vw);height:2px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden}
+#preloader .bar div{height:100%;width:0%;background:linear-gradient(90deg,#7c3aed,#d4af37)}
+#preloader .tag{font-size:10px;letter-spacing:.4em;text-transform:uppercase;color:#666}
+
+/* Grain overlay */
+.grain{position:fixed;inset:0;z-index:9998;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/></filter><rect width='180' height='180' filter='url(%23n)' opacity='0.6'/></svg>")}
+
+/* Scroll progress */
+#progress{position:fixed;top:0;left:0;height:3px;width:0%;z-index:9997;background:linear-gradient(90deg,#7c3aed,#d4af37)}
+
+/* Cursor */
+.cursor-dot,.cursor-ring{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;border-radius:50%}
+.cursor-dot{width:8px;height:8px;background:#d4af37;transform:translate(-50%,-50%)}
+.cursor-ring{width:38px;height:38px;border:1px solid rgba(167,139,250,.6);transform:translate(-50%,-50%);mix-blend-mode:difference;transition:width .3s,height .3s}
+.cursor-ring.hovering{width:64px;height:64px}
+@media(hover:none){.cursor-dot,.cursor-ring{display:none}}
+
+/* Glass */
+.glass{background:rgba(255,255,255,.05);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
+
+/* Tilt */
+.tilt-card{transform-style:preserve-3d;will-change:transform}
+.tilt-card .tilt-inner{transform:translateZ(28px)}
+
+/* Buttons */
+.btn-lux{position:relative;background:linear-gradient(135deg,#7c3aed,#d4af37);color:#0a0a0b;font-weight:700;padding:16px 40px;border-radius:999px;display:inline-flex;align-items:center;gap:10px;transition:box-shadow .3s;overflow:hidden;box-shadow:0 10px 30px rgba(124,58,237,.25)}
+.btn-lux:hover{box-shadow:0 20px 50px rgba(124,58,237,.45)}
+.btn-ghost{border:1px solid rgba(255,255,255,.25);color:#fff;padding:15px 38px;border-radius:999px;font-weight:600;transition:all .3s;display:inline-flex;align-items:center;gap:10px}
+.btn-ghost:hover{background:rgba(255,255,255,.08);border-color:#d4af37;color:#d4af37}
+
+/* Hero */
+.hero{min-height:100vh;position:relative;display:flex;align-items:center;overflow:hidden}
+.hero-bg{position:absolute;inset:-12% 0;background:url('https://loremflickr.com/1600/1000/law,office,books?lock=1') center/cover no-repeat;opacity:.35}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,5,7,.55) 0%,rgba(5,5,7,.75) 55%,#050507 100%)}
+.orb{position:absolute;border-radius:50%;filter:blur(100px);opacity:.3}
+.spotlight{position:absolute;inset:0;pointer-events:none;background:radial-gradient(500px circle at var(--mx,50%) var(--my,40%),rgba(167,139,250,.14),transparent 65%)}
+
+/* Marquee */
+.marquee{display:flex;width:max-content;animation:marquee 32s linear infinite}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* Split text */
+.split-text .char{display:inline-block;white-space:pre}
+
+/* WhatsApp float */
+.wa-float{position:fixed;bottom:28px;right:28px;z-index:1000;width:62px;height:62px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 30px rgba(37,211,102,.5);transition:transform .3s}
+.wa-float:hover{transform:scale(1.12)}
+
+.reveal{opacity:0;transform:translateY(60px)}
+.stat-num{font-family:'Playfair Display',serif;font-size:3rem;font-weight:800;background:linear-gradient(135deg,#a78bfa,#d4af37);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.cta-band{position:relative;border-radius:2rem;background:linear-gradient(#050507,#050507) padding-box,linear-gradient(135deg,#7c3aed,#d4af37) border-box;border:1px solid transparent}
+</style>
+</head>
+<body class="opacity-0" id="body">
+
+<div id="preloader">
+  <div class="brand">Onyx<span>Digital</span></div>
+  <div class="bar"><div id="loadbar"></div></div>
+  <div class="tag">Crafting your preview</div>
+</div>
+<div class="grain"></div>
+<div id="progress"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Nav -->
+<nav class="fixed top-0 inset-x-0 z-50 px-6 py-5 transition-all duration-500" id="nav">
+  <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <a href="#" class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl glass border border-white/10 flex items-center justify-center"><i class="fas fa-scale-balanced text-violet-300"></i></div>
+      <div>
+        <div class="font-display text-lg font-bold leading-none">Kroer\Fink Advokater</div>
+        <div class="text-[10px] tracking-[.25em] text-amber-300/80 uppercase mt-1">Copenhagen</div>
+      </div>
+    </a>
+    <div class="hidden md:flex items-center gap-8 text-sm text-neutral-300">
+      <a href="#about" class="hover:text-white transition">About</a>
+      <a href="#services" class="hover:text-white transition">Services</a>
+      <a href="#gallery" class="hover:text-white transition">Gallery</a>
+      <a href="#contact" class="btn-lux !py-3 !px-6 text-sm magnetic">Book Now</a>
+    </div>
+    <a href="https://wa.me/9233390025902" target="_blank" class="md:hidden w-11 h-11 rounded-full bg-[#25D366] flex items-center justify-center"><i class="fab fa-whatsapp text-white text-xl"></i></a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<header class="hero" id="home">
+  <div class="hero-bg" id="heroBg"></div><div class="hero-overlay"></div>
+  <div class="orb w-[540px] h-[540px] bg-violet-700 -left-40 top-16"></div>
+  <div class="orb w-[420px] h-[420px] bg-amber-500 right-0 bottom-0"></div>
+  <div class="spotlight" id="spotlight"></div>
+  <div class="max-w-7xl mx-auto px-6 relative z-10 pt-28 pb-24 w-full">
+    <div class="max-w-3xl">
+      <div class="glass inline-flex items-center gap-2 rounded-full px-5 py-2 mb-8 border border-white/10" data-gsap="fade-up">
+        <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+        <span class="text-xs tracking-widest uppercase text-neutral-200">Premium Experience in Copenhagen</span>
+      </div>
+      <h1 class="font-display text-5xl md:text-7xl font-black leading-[1.05] mb-6 split-text">Law, Made Clear</h1>
+      <p class="text-lg md:text-xl text-neutral-300 max-w-xl mb-10" data-gsap="fade-up" data-gsap-delay="0.25">
+        Clear Advice, Strong Representation — welcome to Kroer\Fink Advokater, where quality and care come together in the heart of Copenhagen.
+      </p>
+      <div class="flex flex-wrap gap-4" data-gsap="fade-up" data-gsap-delay="0.4">
+        <a href="https://wa.me/9233390025902" target="_blank" class="btn-lux magnetic"><i class="fab fa-whatsapp text-lg"></i> Chat on WhatsApp</a>
+        <a href="#services" class="btn-ghost magnetic">Explore Services</a>
+      </div>
+    </div>
+  </div>
+  <div class="absolute bottom-0 inset-x-0 border-t border-white/10 bg-black/40 backdrop-blur-md py-4 overflow-hidden z-10">
+    <div class="marquee gap-12 text-neutral-400 text-sm uppercase tracking-[.3em] whitespace-nowrap">
+      <span>★ Kroer\Fink Advokater</span><span>Premium Quality</span><span>Copenhagen</span><span>★★★★★ Rated</span><span>Book on WhatsApp</span>
+      <span>★ Kroer\Fink Advokater</span><span>Premium Quality</span><span>Copenhagen</span><span>★★★★★ Rated</span><span>Book on WhatsApp</span>
+    </div>
+  </div>
+</header>
+
+<!-- Stats -->
+<section class="py-16 border-b border-white/5">
+  <div class="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+    <div class="reveal"><div class="stat-num" data-count="500">0</div><p class="text-neutral-400 text-sm mt-2 uppercase tracking-widest">Happy Clients</p></div>
+    <div class="reveal"><div class="stat-num" data-count="10">0</div><p class="text-neutral-400 text-sm mt-2 uppercase tracking-widest">Years Experience</p></div>
+    <div class="reveal"><div class="stat-num" data-count="5">0</div><p class="text-neutral-400 text-sm mt-2 uppercase tracking-widest">Star Rating</p></div>
+    <div class="reveal"><div class="stat-num" data-count="100">0</div><p class="text-neutral-400 text-sm mt-2 uppercase tracking-widest">% Dedication</p></div>
+  </div>
+</section>
+
+<!-- About -->
+<section id="about" class="py-28">
+  <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-14 items-center">
+    <div class="reveal relative">
+      <div class="rounded-[2rem] overflow-hidden border border-white/10 rotate-[-2deg] hover:rotate-0 transition-transform duration-700">
+        <img src="https://loremflickr.com/800/900/law,office,books?lock=2" alt="Kroer\Fink Advokater" class="w-full h-[480px] object-cover">
+      </div>
+      <div class="glass border border-white/10 absolute -bottom-6 -right-2 md:-right-6 rounded-2xl px-6 py-5">
+        <div class="flex items-center gap-3">
+          <i class="fas fa-scale-balanced text-2xl text-amber-300"></i>
+          <div><div class="font-bold text-white">Trusted in Copenhagen</div><div class="text-xs text-neutral-400">Local &amp; loved</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="reveal">
+      <p class="text-amber-300 tracking-[.3em] uppercase text-xs mb-4">About Us</p>
+      <h2 class="font-display text-4xl md:text-5xl font-bold mb-6">The Standard of <span class="text-transparent bg-clip-text" style="background-image:linear-gradient(135deg,#a78bfa,#d4af37)">Excellence</span></h2>
+      <p class="text-neutral-400 text-lg leading-relaxed mb-8">At Kroer\Fink Advokater, every detail is considered and every client is valued. Our passion shows in everything we offer — from the first hello to the lasting result.</p>
+      <a href="https://wa.me/9233390025902" target="_blank" class="btn-lux magnetic"><i class="fab fa-whatsapp text-lg"></i> Message Us Today</a>
+    </div>
+  </div>
+</section>
+
+<!-- Services (bento) -->
+<section id="services" class="py-28 relative">
+  <div class="orb w-[420px] h-[420px] bg-violet-800 right-[-120px] top-10 opacity-20"></div>
+  <div class="max-w-7xl mx-auto px-6 relative z-10">
+    <div class="text-center mb-16 reveal">
+      <p class="text-amber-300 tracking-[.3em] uppercase text-xs mb-4">What We Offer</p>
+      <h2 class="font-display text-4xl md:text-5xl font-bold">Signature Services</h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="tilt-card md:col-span-2 relative overflow-hidden rounded-3xl glass border border-white/10 p-8 md:p-10 group">
+        <img src="https://loremflickr.com/900/600/law,office,books?lock=10" alt="" class="absolute inset-0 w-full h-full object-cover opacity-25 group-hover:opacity-40 transition-opacity duration-700">
+        <div class="relative z-10 max-w-md">
+          <div class="inline-flex items-center gap-2 text-[10px] tracking-[.25em] uppercase text-amber-300 mb-4"><i class="fas fa-scale-balanced"></i> Signature</div>
+          <h3 class="font-display text-3xl text-white mb-3">Consultation</h3>
+          <p class="text-neutral-300 text-sm leading-relaxed">Our most loved offering — refined over years of practice and tailored to every client.</p>
+        </div>
+      </div>
+      <div class="tilt-card glass border border-white/10 rounded-3xl p-8 transition-all duration-500 hover:bg-white/10">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500/30 to-amber-400/20 border border-white/10 flex items-center justify-center mb-5"><i class="fas fa-scale-balanced text-violet-300 text-xl"></i></div>
+        <h3 class="font-display text-xl text-white mb-2">Contract Law</h3>
+        <p class="text-neutral-400 text-sm">Crafted around you.</p>
+      </div>
+      <div class="tilt-card glass border border-white/10 rounded-3xl p-8 transition-all duration-500 hover:bg-white/10">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500/30 to-amber-400/20 border border-white/10 flex items-center justify-center mb-5"><i class="fas fa-scale-balanced text-violet-300 text-xl"></i></div>
+        <h3 class="font-display text-xl text-white mb-2">Business Law</h3>
+        <p class="text-neutral-400 text-sm">Crafted around you.</p>
+      </div>
+      <div class="tilt-card glass border border-white/10 rounded-3xl p-8 transition-all duration-500 hover:bg-white/10">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500/30 to-amber-400/20 border border-white/10 flex items-center justify-center mb-5"><i class="fas fa-scale-balanced text-violet-300 text-xl"></i></div>
+        <h3 class="font-display text-xl text-white mb-2">Family Law</h3>
+        <p class="text-neutral-400 text-sm">Crafted around you.</p>
+      </div>
+      <div class="tilt-card glass border border-white/10 rounded-3xl p-8 transition-all duration-500 hover:bg-white/10">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500/30 to-amber-400/20 border border-white/10 flex items-center justify-center mb-5"><i class="fas fa-scale-balanced text-violet-300 text-xl"></i></div>
+        <h3 class="font-display text-xl text-white mb-2">Inheritance</h3>
+        <p class="text-neutral-400 text-sm">Crafted around you.</p>
+      </div>
+      <div class="tilt-card md:col-span-3 glass border border-white/10 rounded-3xl p-8 flex flex-col md:flex-row md:items-center gap-6">
+        <div class="w-14 h-14 shrink-0 rounded-2xl bg-gradient-to-br from-amber-400/30 to-violet-500/20 border border-white/10 flex items-center justify-center"><i class="fas fa-scale-balanced text-amber-300 text-2xl"></i></div>
+        <div class="flex-1"><h3 class="font-display text-2xl text-white mb-1">Court Representation</h3><p class="text-neutral-400 text-sm">Ask us anything — we are one WhatsApp message away.</p></div>
+        <a href="https://wa.me/9233390025902" target="_blank" class="btn-lux !py-3 !px-7 text-sm shrink-0 magnetic"><i class="fab fa-whatsapp"></i> Message Us</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="py-28 border-y border-white/5 bg-white/[.02]">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="text-center mb-14 reveal">
+      <p class="text-amber-300 tracking-[.3em] uppercase text-xs mb-4">Kind Words</p>
+      <h2 class="font-display text-4xl md:text-5xl font-bold">What People Say</h2>
+    </div>
+    <div class="swiper testiSwiper pb-12 reveal">
+      <div class="swiper-wrapper">
+      <div class="swiper-slide h-auto">
+        <div class="glass border border-white/10 rounded-3xl p-8 h-full flex flex-col">
+          <div class="text-amber-300 mb-4 text-sm"><i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i></div>
+          <p class="text-neutral-200 flex-1 italic">"Loved every minute — the team truly cares."</p>
+          <div class="flex items-center gap-3 mt-6 pt-6 border-t border-white/10">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-violet-500 to-amber-400 flex items-center justify-center text-xs font-bold text-black">MK</div>
+            <div class="text-sm text-neutral-400">M.K. — Copenhagen</div>
+          </div>
+        </div>
+      </div>
+      <div class="swiper-slide h-auto">
+        <div class="glass border border-white/10 rounded-3xl p-8 h-full flex flex-col">
+          <div class="text-amber-300 mb-4 text-sm"><i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i></div>
+          <p class="text-neutral-200 flex-1 italic">"Best decision we ever made. Five stars, easily."</p>
+          <div class="flex items-center gap-3 mt-6 pt-6 border-t border-white/10">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-violet-500 to-amber-400 flex items-center justify-center text-xs font-bold text-black">JS</div>
+            <div class="text-sm text-neutral-400">J.S. — Copenhagen</div>
+          </div>
+        </div>
+      </div>
+      <div class="swiper-slide h-auto">
+        <div class="glass border border-white/10 rounded-3xl p-8 h-full flex flex-col">
+          <div class="text-amber-300 mb-4 text-sm"><i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i></div>
+          <p class="text-neutral-200 flex-1 italic">"Professional from the first hello to the last detail."</p>
+          <div class="flex items-center gap-3 mt-6 pt-6 border-t border-white/10">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-violet-500 to-amber-400 flex items-center justify-center text-xs font-bold text-black">AR</div>
+            <div class="text-sm text-neutral-400">A.R. — Copenhagen</div>
+          </div>
+        </div>
+      </div>
+
+      </div>
+      <div class="swiper-pagination"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Gallery -->
+<section id="gallery" class="py-28">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-14 reveal">
+      <p class="text-amber-300 tracking-[.3em] uppercase text-xs mb-4">Gallery</p>
+      <h2 class="font-display text-4xl md:text-5xl font-bold">Moments &amp; Memories</h2>
+    </div>
+    <div class="swiper gallerySwiper pb-14 reveal">
+      <div class="swiper-wrapper">
+      <div class="swiper-slide"><img src="https://loremflickr.com/800/600/law,office,books?lock=20" class="rounded-3xl w-full h-80 object-cover" alt="Kroer\Fink Advokater"></div>
+      <div class="swiper-slide"><img src="https://loremflickr.com/800/600/law,office,books?lock=21" class="rounded-3xl w-full h-80 object-cover" alt="Kroer\Fink Advokater"></div>
+      <div class="swiper-slide"><img src="https://loremflickr.com/800/600/law,office,books?lock=22" class="rounded-3xl w-full h-80 object-cover" alt="Kroer\Fink Advokater"></div>
+      <div class="swiper-slide"><img src="https://loremflickr.com/800/600/law,office,books?lock=23" class="rounded-3xl w-full h-80 object-cover" alt="Kroer\Fink Advokater"></div>
+      <div class="swiper-slide"><img src="https://loremflickr.com/800/600/law,office,books?lock=24" class="rounded-3xl w-full h-80 object-cover" alt="Kroer\Fink Advokater"></div>
+      <div class="swiper-slide"><img src="https://loremflickr.com/800/600/law,office,books?lock=25" class="rounded-3xl w-full h-80 object-cover" alt="Kroer\Fink Advokater"></div>
+      <div class="swiper-slide"><img src="https://loremflickr.com/800/600/law,office,books?lock=26" class="rounded-3xl w-full h-80 object-cover" alt="Kroer\Fink Advokater"></div>
+
+      </div>
+      <div class="swiper-pagination"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact" class="py-28">
+  <div class="max-w-5xl mx-auto px-6">
+    <div class="text-center mb-14 reveal">
+      <p class="text-amber-300 tracking-[.3em] uppercase text-xs mb-4">Get In Touch</p>
+      <h2 class="font-display text-4xl md:text-5xl font-bold">Begin Your Experience</h2>
+    </div>
+    <div class="cta-band p-10 md:p-14 reveal">
+      <div class="grid md:grid-cols-2 gap-10 items-center">
+        <div>
+          <h3 class="font-display text-2xl font-bold mb-4">Ready when you are</h3>
+          <p class="text-neutral-400 mb-8 leading-relaxed">Skip the forms — the fastest way to reach us is a quick WhatsApp message. Tell us what you need and we'll take care of the rest.</p>
+          <a href="https://wa.me/9233390025902" target="_blank" class="btn-lux magnetic"><i class="fab fa-whatsapp text-xl"></i> WhatsApp: Chat with Siddique</a>
+          <div class="mt-6 text-sm text-neutral-500"><i class="fas fa-map-marker-alt mr-2 text-amber-300"></i>Copenhagen, Denmark</div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="glass border border-white/10 rounded-2xl p-6 text-center"><i class="fas fa-scale-balanced text-2xl text-violet-300 mb-3"></i><div class="text-sm text-neutral-400">Premium Service</div></div>
+          <div class="glass border border-white/10 rounded-2xl p-6 text-center"><i class="fas fa-clock text-2xl text-violet-300 mb-3"></i><div class="text-sm text-neutral-400">Quick Response</div></div>
+          <div class="glass border border-white/10 rounded-2xl p-6 text-center"><i class="fas fa-heart text-2xl text-violet-300 mb-3"></i><div class="text-sm text-neutral-400">Made With Care</div></div>
+          <div class="glass border border-white/10 rounded-2xl p-6 text-center"><i class="fas fa-star text-2xl text-violet-300 mb-3"></i><div class="text-sm text-neutral-400">Five-Star Rated</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="border-t border-white/5 py-12 bg-black/50">
+  <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8">
+    <div>
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-9 h-9 rounded-xl glass border border-white/10 flex items-center justify-center"><i class="fas fa-scale-balanced text-violet-300 text-sm"></i></div>
+        <span class="font-display font-bold text-lg">Kroer\Fink Advokater</span>
+      </div>
+      <p class="text-neutral-500 text-sm">Clear Advice, Strong Representation. Proudly serving Copenhagen.</p>
+    </div>
+    <div>
+      <h4 class="font-bold mb-4 text-sm uppercase tracking-widest text-neutral-300">Explore</h4>
+      <div class="flex flex-col gap-2 text-sm text-neutral-500">
+        <a href="#about" class="hover:text-white transition">About</a>
+        <a href="#services" class="hover:text-white transition">Services</a>
+        <a href="#gallery" class="hover:text-white transition">Gallery</a>
+        <a href="#contact" class="hover:text-white transition">Contact</a>
+      </div>
+    </div>
+    <div>
+      <h4 class="font-bold mb-4 text-sm uppercase tracking-widest text-neutral-300">Connect</h4>
+      <div class="flex gap-3 mb-4">
+        <a href="https://wa.me/9233390025902" target="_blank" class="w-10 h-10 rounded-full glass border border-white/10 flex items-center justify-center hover:bg-[#25D366] transition"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://onyx-digital-sidd.vercel.app/" target="_blank" class="w-10 h-10 rounded-full glass border border-white/10 flex items-center justify-center hover:bg-violet-600 transition"><i class="fas fa-globe"></i></a>
+      </div>
+      <p class="text-neutral-500 text-sm">Design preview crafted by <a href="https://onyx-digital-sidd.vercel.app/" target="_blank" class="text-amber-300 hover:underline">OnyxDigital</a></p>
+    </div>
+  </div>
+  <div class="max-w-6xl mx-auto px-6 mt-10 pt-6 border-t border-white/5 text-center text-xs text-neutral-600">
+    <p>&copy; 2026 Kroer\Fink Advokater. Concept design by OnyxDigital.</p>
+  </div>
+</footer>
+
+<a href="https://wa.me/9233390025902" target="_blank" class="wa-float"><i class="fab fa-whatsapp text-3xl text-white"></i></a>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// ---- Preloader ----
+var loadTl = gsap.timeline();
+loadTl.to('#loadbar', {width:'100%', duration:1.6, ease:'power2.inOut'})
+  .to('#preloader .brand', {y:-20, opacity:0, duration:.4}, '+=.1')
+  .to('#preloader', {yPercent:-100, duration:.8, ease:'power4.inOut'}, '-=.1')
+  .set('#preloader', {display:'none'})
+  .to('#body', {opacity:1, duration:.3}, '-=.8');
+
+// ---- Split text hero ----
+document.querySelectorAll('.split-text').forEach(function(el){
+  var txt = el.textContent; el.textContent = '';
+  txt.split('').forEach(function(ch){
+    var s = document.createElement('span');
+    s.className = 'char'; s.textContent = ch;
+    el.appendChild(s);
+  });
+  gsap.fromTo(el.querySelectorAll('.char'), {opacity:0, y:80, rotateX:-40},
+    {opacity:1, y:0, rotateX:0, stagger:.03, duration:.9, ease:'power3.out', delay:.2});
+});
+
+// ---- Hero parallax ----
+gsap.to('#heroBg', {yPercent:18, ease:'none', scrollTrigger:{trigger:'.hero', start:'top top', end:'bottom top', scrub:true}});
+
+// ---- Spotlight ----
+var hero = document.getElementById('home');
+hero.addEventListener('mousemove', function(e){
+  var r = hero.getBoundingClientRect();
+  document.getElementById('spotlight').style.setProperty('--mx', (e.clientX - r.left) + 'px');
+  document.getElementById('spotlight').style.setProperty('--my', (e.clientY - r.top) + 'px');
+});
+
+// ---- GSAP reveals ----
+document.querySelectorAll('[data-gsap]').forEach(function(el){
+  gsap.fromTo(el, {opacity:0, y:50}, {opacity:1, y:0, duration:1, ease:'power3.out',
+    delay:parseFloat(el.getAttribute('data-gsap-delay')||'0'), scrollTrigger:{trigger:el, start:'top 85%'}});
+});
+document.querySelectorAll('.reveal').forEach(function(el){
+  gsap.fromTo(el, {opacity:0, y:60}, {opacity:1, y:0, duration:1, ease:'power3.out', scrollTrigger:{trigger:el, start:'top 88%'}});
+});
+
+// ---- Counters ----
+document.querySelectorAll('[data-count]').forEach(function(el){
+  var target = parseInt(el.getAttribute('data-count')); var c = 0;
+  var iv = setInterval(function(){ c += Math.max(1, target/40); if(c >= target){ el.textContent = target + '+'; clearInterval(iv); } else { el.textContent = Math.floor(c) + '+'; } }, 30);
+});
+
+// ---- Swipers ----
+new Swiper('.testiSwiper', { slidesPerView:1, spaceBetween:24, loop:true, autoplay:{delay:3400, disableOnInteraction:false},
+  breakpoints:{768:{slidesPerView:2},1200:{slidesPerView:3}}, pagination:{el:'.testiSwiper .swiper-pagination', clickable:true} });
+new Swiper('.gallerySwiper', { effect:'coverflow', grabCursor:true, centeredSlides:true, slidesPerView:'auto', loop:true,
+  coverflowEffect:{rotate:0, stretch:0, depth:220, modifier:2.2, slideShadows:false},
+  autoplay:{delay:2600, disableOnInteraction:false}, breakpoints:{640:{slidesPerView:2},1024:{slidesPerView:3}},
+  pagination:{el:'.gallerySwiper .swiper-pagination', clickable:true} });
+
+// ---- Cursor ----
+(function(){
+  var dot = document.getElementById('cursorDot'), ring = document.getElementById('cursorRing');
+  var mx=0, my=0, rx=0, ry=0;
+  document.addEventListener('mousemove', function(e){ mx=e.clientX; my=e.clientY; dot.style.left=mx+'px'; dot.style.top=my+'px'; });
+  function loop(){ rx+=(mx-rx)*.15; ry+=(my-ry)*.15; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(loop); }
+  loop();
+  document.querySelectorAll('a, .tilt-card, button').forEach(function(el){
+    el.addEventListener('mouseenter', function(){ ring.classList.add('hovering'); });
+    el.addEventListener('mouseleave', function(){ ring.classList.remove('hovering'); });
+  });
+})();
+
+// ---- Magnetic buttons ----
+document.querySelectorAll('.magnetic').forEach(function(btn){
+  btn.addEventListener('mousemove', function(e){
+    var r = btn.getBoundingClientRect();
+    var x = e.clientX - r.left - r.width/2, y = e.clientY - r.top - r.height/2;
+    btn.style.transform = 'translate(' + (x*.25) + 'px,' + (y*.35) + 'px)';
+  });
+  btn.addEventListener('mouseleave', function(){ btn.style.transform = 'translate(0,0)'; });
+});
+
+// ---- 3D tilt ----
+document.querySelectorAll('.tilt-card').forEach(function(card){
+  card.addEventListener('mousemove', function(e){
+    var r = card.getBoundingClientRect();
+    var x = (e.clientX - r.left)/r.width - .5, y = (e.clientY - r.top)/r.height - .5;
+    card.style.transform = 'perspective(900px) rotateX(' + (-y*10) + 'deg) rotateY(' + (x*10) + 'deg) translateY(-6px)';
+  });
+  card.addEventListener('mouseleave', function(){ card.style.transform = 'perspective(900px) rotateX(0) rotateY(0)'; });
+});
+
+// ---- Nav + progress ----
+window.addEventListener('scroll', function(){
+  var nav = document.getElementById('nav');
+  if(window.scrollY > 60){ nav.classList.add('bg-black/60','backdrop-blur-xl','border-b','border-white/5'); }
+  else { nav.classList.remove('bg-black/60','backdrop-blur-xl','border-b','border-white/5'); }
+  var h = document.documentElement;
+  var p = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  document.getElementById('progress').style.width = p + '%';
+});
+</script>
+</body>
+</html>
